@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur QR Code EPC - Virements SEPA</title>
+
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Configuration Tailwind pour le mode sombre -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
+
+    <!-- QR Code library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <style>
+        /* Styles personnalisés si nécessaire */
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+
+    <!-- Header -->
+    <header class="bg-white dark:bg-gray-800 shadow-sm">
+        <div class="max-w-4xl mx-auto px-4 py-6 flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
+                    Générateur QR Code EPC
+                </h1>
+                <p class="text-gray-600 dark:text-gray-400 mt-2">
+                    Créez des QR codes pour virements SEPA conformes EPC
+                </p>
+            </div>
+            <div class="flex gap-2">
+                <button id="historyBtn"
+                    class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition"
+                    title="Historique">
+                    <svg class="w-6 h-6 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </button>
+                <button id="darkModeToggle"
+                    class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition"
+                    title="Mode sombre">
+                    <svg id="sunIcon" class="w-6 h-6 text-yellow-500 hidden dark:block" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
+                        </path>
+                    </svg>
+                    <svg id="moonIcon" class="w-6 h-6 text-gray-700 block dark:hidden" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 py-8">
+
+        <!-- Formulaire -->
+        <div id="formSection" class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+            <form id="epcForm">
+
+                <!-- Bénéficiaire -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2">
+                        Nom du bénéficiaire *
+                    </label>
+                    <input type="text" id="beneficiary" maxlength="70" required
+                        class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                        placeholder="Wikimedia Foundation">
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        <span id="beneficiaryCount">0</span>/70 caractères
+                    </p>
+                </div>
+
+                <!-- IBAN -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2">
+                        IBAN *
+                    </label>
+                    <input type="text" id="iban" required
+                        class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                        placeholder="BE68 5390 0754 7034">
+                    <div id="ibanFeedback" class="mt-1"></div>
+                </div>
+
+                <!-- Montant -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2">
+                        Montant (EUR)
+                    </label>
+                    <input type="number" id="amount" step="0.01" min="0.01" max="999999999.99"
+                        class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                        placeholder="123.45">
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        Laissez vide si le montant est libre
+                    </p>
+                </div>
+
+                <!-- Communication -->
+                <div class="mb-6">
+                    <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2">
+                        Communication / Référence
+                    </label>
+                    <textarea id="remittance" maxlength="140" rows="3"
+                        class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                        placeholder="Donation pour Wikipedia"></textarea>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        <span id="remittanceCount">0</span>/140 caractères
+                    </p>
+                </div>
+
+                <!-- Boutons -->
+                <div class="flex gap-3">
+                    <button type="submit"
+                        class="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition font-medium">
+                        Générer le QR Code
+                    </button>
+                    <button type="reset"
+                        class="px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition text-gray-700 dark:text-gray-300">
+                        Réinitialiser
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Zone d'affichage du QR Code -->
+        <div id="qrResult" class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hidden fade-in">
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">
+                Votre QR Code EPC
+            </h2>
+
+            <!-- QR Code -->
+            <div class="flex justify-center mb-6">
+                <div id="qrcode" class="border-4 border-gray-200 dark:border-gray-600 rounded-lg p-4 bg-white"></div>
+            </div>
+
+            <!-- Informations -->
+            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-4">
+                <h3 class="font-medium text-gray-900 dark:text-white mb-2">Détails du virement</h3>
+                <dl class="space-y-1 text-sm">
+                    <div class="flex justify-between">
+                        <dt class="text-gray-600 dark:text-gray-400">Bénéficiaire:</dt>
+                        <dd id="displayBeneficiary" class="font-medium text-gray-900 dark:text-white"></dd>
+                    </div>
+                    <div class="flex justify-between">
+                        <dt class="text-gray-600 dark:text-gray-400">IBAN:</dt>
+                        <dd id="displayIban" class="font-medium text-gray-900 dark:text-white"></dd>
+                    </div>
+                    <div class="flex justify-between">
+                        <dt class="text-gray-600 dark:text-gray-400">Montant:</dt>
+                        <dd id="displayAmount" class="font-medium text-gray-900 dark:text-white"></dd>
+                    </div>
+                    <div id="displayRemittanceContainer" class="hidden">
+                        <div class="flex justify-between">
+                            <dt class="text-gray-600 dark:text-gray-400">Communication:</dt>
+                            <dd id="displayRemittance" class="font-medium text-gray-900 dark:text-white"></dd>
+                        </div>
+                    </div>
+                </dl>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex gap-3">
+                <button id="downloadBtn"
+                    class="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
+                    📥 Télécharger PNG
+                </button>
+                <button id="copyBtn"
+                    class="flex-1 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition">
+                    📋 Copier l'image
+                </button>
+                <button id="newQrBtn"
+                    class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition text-gray-700 dark:text-gray-300">
+                    Nouveau
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Modal Historique -->
+    <div id="historyModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4 z-50">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden">
+            <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+                    📋 Historique des QR Codes
+                </h2>
+                <button id="closeHistoryBtn" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition">
+                    <svg class="w-6 h-6 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+
+            <div id="historyContent" class="p-6 overflow-y-auto max-h-[60vh]">
+                <!-- Contenu dynamique -->
+            </div>
+
+            <div id="historyClearSection" class="p-6 border-t border-gray-200 dark:border-gray-700 hidden">
+                <button id="clearHistoryBtn"
+                    class="w-full bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition">
+                    🗑️ Effacer l'historique
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="js/app.js"></script>
+</body>
+
+</html>
