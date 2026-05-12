@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Générateur QR Code EPC - Virements SEPA</title>
+    <title data-i18n-title="app.title">Générateur QR Code EPC - Virements SEPA</title>
 
     <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -16,8 +16,8 @@
         }
     </script>
 
-    <!-- QR Code library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- QR Code Styling library -->
+    <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.9.2/lib/qr-code-styling.js"></script>
 
     <style>
         /* Styles personnalisés si nécessaire */
@@ -36,6 +36,33 @@
                 transform: translateY(0);
             }
         }
+        /* Accordion personnalisation QR */
+        .custom-details summary::-webkit-details-marker {
+            display: none;
+        }
+        .custom-details summary::marker {
+            display: none;
+            content: '';
+        }
+        .custom-details[open] .chevron-icon {
+            transform: rotate(180deg);
+        }
+        .chevron-icon {
+            transition: transform 0.2s ease;
+        }
+        /* Infos transaction text */
+        #qrTextAbove, #qrTextBelow {
+            width: 100%;
+            line-height: 1.5;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            padding: 2px 0;
+        }
+        /* Contrainte d'affichage du QR : toujours 300px dans l'UI */
+        #qrcode canvas {
+            max-width: 300px !important;
+            max-height: 300px !important;
+        }
     </style>
 </head>
 
@@ -43,19 +70,28 @@
 
     <!-- Header -->
     <header class="bg-white dark:bg-gray-800 shadow-sm">
-        <div class="max-w-4xl mx-auto px-4 py-6 flex justify-between items-center">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
             <div>
-                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
+                <h1 class="text-xl font-bold text-gray-900 dark:text-white" data-i18n="app.title">
                     Générateur QR Code EPC
                 </h1>
-                <p class="text-gray-600 dark:text-gray-400 mt-2">
-                    Créez des QR codes pour virements SEPA conformes EPC
+                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1" data-i18n="app.subtitle">
+                    QR codes pour virements SEPA
                 </p>
             </div>
-            <div class="flex gap-2">
+            <div class="flex items-center gap-2">
+                <select id="langSelect"
+                    class="px-2 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-xs">
+                    <option value="fr">FR</option>
+                    <option value="en">EN</option>
+                    <option value="de">DE</option>
+                    <option value="es">ES</option>
+                    <option value="it">IT</option>
+                    <option value="nl">NL</option>
+                </select>
                 <button id="historyBtn"
                     class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition"
-                    title="Historique">
+                    data-i18n-title="history.title">
                     <svg class="w-6 h-6 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor"
                         viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -64,7 +100,7 @@
                 </button>
                 <button id="darkModeToggle"
                     class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition"
-                    title="Mode sombre">
+                    data-i18n-title="darkmode.title">
                     <svg id="sunIcon" class="w-6 h-6 text-yellow-500 hidden dark:block" fill="none"
                         stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -83,106 +119,336 @@
     </header>
 
     <!-- Main Content -->
-    <main class="max-w-4xl mx-auto px-4 py-8">
+    <main class="max-w-4xl mx-auto px-4 py-4">
 
         <!-- Formulaire -->
-        <div id="formSection" class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+        <div id="formSection" class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 mb-4">
             <form id="epcForm">
 
                 <!-- Bénéficiaire -->
-                <div class="mb-4">
-                    <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2">
+                <div class="mb-2">
+                    <label class="block text-gray-700 dark:text-gray-300 font-medium mb-1" data-i18n="form.beneficiary">
                         Nom du bénéficiaire *
                     </label>
                     <input type="text" id="beneficiary" maxlength="70" required
                         class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                        placeholder="Wikimedia Foundation">
+                        placeholder="Wikimedia Foundation" data-i18n-placeholder="form.beneficiary.placeholder">
                     <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                        <span id="beneficiaryCount">0</span>/70 caractères
+                        <span id="beneficiaryCount">0</span>/70
                     </p>
                 </div>
 
                 <!-- IBAN -->
-                <div class="mb-4">
-                    <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2">
+                <div class="mb-2">
+                    <label class="block text-gray-700 dark:text-gray-300 font-medium mb-1" data-i18n="form.iban">
                         IBAN *
                     </label>
                     <input type="text" id="iban" required
                         class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                        placeholder="BE68 5390 0754 7034">
+                        placeholder="BE68 5390 0754 7034" data-i18n-placeholder="form.iban.placeholder">
                     <div id="ibanFeedback" class="mt-1"></div>
                 </div>
 
                 <!-- Montant -->
-                <div class="mb-4">
-                    <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2">
+                <div class="mb-2">
+                    <label class="block text-gray-700 dark:text-gray-300 font-medium mb-1" data-i18n="form.amount">
                         Montant (EUR)
                     </label>
                     <input type="number" id="amount" step="0.01" min="0.01" max="999999999.99"
                         class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                        placeholder="123.45">
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        placeholder="123.45" data-i18n-placeholder="form.amount.placeholder">
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1" data-i18n="form.amount.optional">
                         Laissez vide si le montant est libre
                     </p>
                 </div>
 
                 <!-- Communication -->
-                <div class="mb-6">
-                    <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2">
+                <div class="mb-2">
+                    <label class="block text-gray-700 dark:text-gray-300 font-medium mb-1" data-i18n="form.remittance">
                         Communication / Référence
                     </label>
                     <textarea id="remittance" maxlength="140" rows="3"
                         class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                        placeholder="Donation pour Wikipedia"></textarea>
+                        placeholder="Donation pour Wikipedia" data-i18n-placeholder="form.remittance.placeholder"></textarea>
                     <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                        <span id="remittanceCount">0</span>/140 caractères
+                        <span id="remittanceCount">0</span>/140
                     </p>
                 </div>
 
                 <!-- Boutons -->
                 <div class="flex gap-3">
                     <button type="submit"
-                        class="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition font-medium">
+                        class="flex-1 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition font-medium"
+                        data-i18n="form.submit">
                         Générer le QR Code
                     </button>
                     <button type="reset"
-                        class="px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition text-gray-700 dark:text-gray-300">
+                        class="px-6 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition text-gray-700 dark:text-gray-300"
+                        data-i18n="form.reset">
                         Réinitialiser
                     </button>
                 </div>
             </form>
         </div>
 
+        <!-- Personnalisation du QR Code -->
+        <details id="customizationAccordion" class="custom-details bg-white dark:bg-gray-800 rounded-lg shadow-md mb-6">
+            <summary class="px-4 py-2 cursor-pointer list-none flex items-center justify-between select-none hover:bg-gray-50 dark:hover:bg-gray-750 rounded-t-lg transition">
+                <span class="text-base font-semibold text-gray-900 dark:text-white flex items-center gap-2" data-i18n="customize.title">
+                    🎨 Personnalisation du QR Code
+                </span>
+                <svg class="chevron-icon w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </summary>
+            <div class="px-4 pb-3 space-y-2">
+
+                <!-- Résolution d'export -->
+                <div class="flex items-center justify-between">
+                    <label class="text-sm text-gray-600 dark:text-gray-400" data-i18n="customize.resolution">Résolution d'export</label>
+                    <select id="qrResolutionSelect"
+                        class="w-44 px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm">
+                        <option value="300" data-i18n="customize.resolution.standard">Standard (300px)</option>
+                        <option value="600" selected data-i18n="customize.resolution.high">Haute (600px)</option>
+                        <option value="900" data-i18n="customize.resolution.veryhigh">Très haute (900px)</option>
+                        <option value="1200" data-i18n="customize.resolution.ultra">Ultra (1200px)</option>
+                    </select>
+                </div>
+                <hr class="border-gray-200 dark:border-gray-700">
+
+                <!-- Logo -->
+                <div>
+                    <h4 class="font-semibold text-gray-800 dark:text-gray-200 mb-1 text-xs uppercase tracking-wide" data-i18n="logo.title">📷 Logo</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-2">
+                        <div>
+                            <label class="block text-sm text-gray-600 dark:text-gray-400 mb-1" data-i18n="logo.image">Image</label>
+                            <div class="flex gap-2">
+                                <input type="file" id="logoFileInput" accept="image/*"
+                                    class="block w-full text-sm text-gray-500 file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-blue-900 dark:file:text-blue-300 cursor-pointer">
+                                <button id="logoRemoveBtn" type="button"
+                                    class="px-2 py-1 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition text-sm whitespace-nowrap"
+                                    data-i18n-title="logo.remove" title="Supprimer le logo">🗑️</button>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-600 dark:text-gray-400 mb-1" data-i18n="logo.shape">Forme</label>
+                            <div class="flex gap-3 flex-wrap">
+                                <label class="flex items-center gap-1.5 cursor-pointer">
+                                    <input type="radio" name="logoShape" value="square" checked class="text-blue-600">
+                                    <span class="text-sm text-gray-700 dark:text-gray-300" data-i18n="logo.square">Carré</span>
+                                </label>
+                                <label class="flex items-center gap-1.5 cursor-pointer">
+                                    <input type="radio" name="logoShape" value="round" class="text-blue-600">
+                                    <span class="text-sm text-gray-700 dark:text-gray-300" data-i18n="logo.round">Rond</span>
+                                </label>
+                                <label class="flex items-center gap-1.5 cursor-pointer">
+                                    <input type="radio" name="logoShape" value="original" class="text-blue-600">
+                                    <span class="text-sm text-gray-700 dark:text-gray-300" data-i18n="logo.original">Original</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-600 dark:text-gray-400 mb-1">
+                                <span data-i18n="logo.size">Taille</span> : <span id="logoSizeValue">25</span>%
+                            </label>
+                            <input type="range" id="logoSizeSlider" min="10" max="40" value="25"
+                                class="w-full accent-blue-600">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-600 dark:text-gray-400 mb-1" data-i18n="logo.fit">Ajustement</label>
+                            <div class="flex gap-3 flex-wrap">
+                                <label class="flex items-center gap-1.5 cursor-pointer">
+                                    <input type="radio" name="logoFit" value="deform" checked class="text-blue-600">
+                                    <span class="text-sm text-gray-700 dark:text-gray-300" data-i18n="logo.deform">Déformer</span>
+                                </label>
+                                <label class="flex items-center gap-1.5 cursor-pointer">
+                                    <input type="radio" name="logoFit" value="crop" class="text-blue-600">
+                                    <span class="text-sm text-gray-700 dark:text-gray-300" data-i18n="logo.crop">Recadrer</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pixels + Finder Patterns -->
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="flex-1 min-w-0">
+                        <h4 class="font-semibold text-gray-800 dark:text-gray-200 mb-1 text-xs uppercase tracking-wide" data-i18n="pixels.title">🎨 Pixels</h4>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div>
+                                <label class="block text-sm text-gray-600 dark:text-gray-400 mb-1" data-i18n="pixels.shape">Forme</label>
+                                <select id="pixelShapeSelect"
+                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm">
+                                    <option value="square" data-i18n="pixels.square">Carré</option>
+                                    <option value="rounded" data-i18n="pixels.rounded">Arrondi</option>
+                                    <option value="dots" data-i18n="pixels.dots">Points</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm text-gray-600 dark:text-gray-400 mb-1" data-i18n="pixels.color">Couleur</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="color" id="pixelColorInput" value="#000000"
+                                        class="w-8 h-8 rounded cursor-pointer border border-gray-300 dark:border-gray-600 p-0.5 shrink-0">
+                                    <input type="text" id="pixelColorText" value="#000000"
+                                        class="flex-1 min-w-0 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm font-mono">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm text-gray-600 dark:text-gray-400 mb-1" data-i18n="pixels.background">Fond</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="color" id="bgColorInput" value="#ffffff"
+                                        class="w-8 h-8 rounded cursor-pointer border border-gray-300 dark:border-gray-600 p-0.5 shrink-0">
+                                    <input type="text" id="bgColorText" value="#ffffff"
+                                        class="flex-1 min-w-0 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm font-mono">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hidden md:block w-px bg-gray-200 dark:bg-gray-700 self-stretch"></div>
+                    <hr class="md:hidden border-gray-200 dark:border-gray-700">
+                    <div class="flex-1 min-w-0">
+                        <h4 class="font-semibold text-gray-800 dark:text-gray-200 mb-1 text-xs uppercase tracking-wide" data-i18n="finders.title">🔲 Finder Patterns (3 coins)</h4>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div>
+                                <label class="block text-sm text-gray-600 dark:text-gray-400 mb-1" data-i18n="finders.style">Style des coins</label>
+                                <select id="cornersStyleSelect"
+                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm">
+                                    <option value="square" data-i18n="finders.square">Carré</option>
+                                    <option value="extra-rounded" data-i18n="finders.rounded">Arrondi</option>
+                                    <option value="dot" data-i18n="finders.circle">Cercle</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm text-gray-600 dark:text-gray-400 mb-1" data-i18n="finders.frameColor">Couleur cadre</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="color" id="cornersFrameColorInput" value="#000000"
+                                        class="w-8 h-8 rounded cursor-pointer border border-gray-300 dark:border-gray-600 p-0.5 shrink-0">
+                                    <input type="text" id="cornersFrameColorText" value="#000000"
+                                        class="flex-1 min-w-0 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm font-mono">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm text-gray-600 dark:text-gray-400 mb-1" data-i18n="finders.dotColor">Couleur point</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="color" id="cornersDotColorInput" value="#000000"
+                                        class="w-8 h-8 rounded cursor-pointer border border-gray-300 dark:border-gray-600 p-0.5 shrink-0">
+                                    <input type="text" id="cornersDotColorText" value="#000000"
+                                        class="flex-1 min-w-0 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm font-mono">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="border-gray-200 dark:border-gray-700">
+
+                <!-- Infos Transaction -->
+                <div>
+                    <h4 class="font-semibold text-gray-800 dark:text-gray-200 mb-1 text-xs uppercase tracking-wide" data-i18n="transaction.title">📝 Infos Transaction</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-2">
+                        <div>
+                            <label class="block text-sm text-gray-600 dark:text-gray-400 mb-1" data-i18n="transaction.show">Afficher</label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" id="textInfoToggle" class="rounded text-blue-600">
+                                <span class="text-sm text-gray-700 dark:text-gray-300" data-i18n="transaction.showLabel">Afficher les infos</span>
+                            </label>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-600 dark:text-gray-400 mb-1" data-i18n="transaction.font">Police</label>
+                            <select id="textFontSelect"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm">
+                                <option value="Arial, sans-serif">Arial</option>
+                                <option value="'Courier New', monospace">Courier New</option>
+                                <option value="Georgia, serif">Georgia</option>
+                                <option value="'Times New Roman', serif">Times New Roman</option>
+                                <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+                                <option value="Verdana, sans-serif">Verdana</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-600 dark:text-gray-400 mb-1">
+                                <span data-i18n="transaction.size">Taille</span> : <span id="textFontSizeValue">16</span>px
+                            </label>
+                            <input type="range" id="textFontSizeSlider" min="10" max="32" value="16"
+                                class="w-full accent-blue-600">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-600 dark:text-gray-400 mb-1" data-i18n="transaction.color">Couleur du texte</label>
+                            <div class="flex items-center gap-2">
+                                <input type="color" id="textColorInput" value="#000000"
+                                    class="w-8 h-8 rounded cursor-pointer border border-gray-300 dark:border-gray-600 p-0.5">
+                                <input type="text" id="textColorText" value="#000000"
+                                    class="w-20 px-2 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-xs font-mono">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="border-gray-200 dark:border-gray-700">
+
+                <!-- Presets -->
+                <div>
+                    <h4 class="font-semibold text-gray-800 dark:text-gray-200 mb-1 text-xs uppercase tracking-wide" data-i18n="presets.title">💾 Presets</h4>
+                    <div class="flex items-center gap-2">
+                        <input type="text" id="presetNameInput" placeholder="Nom..."
+                            class="flex-1 min-w-0 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm" data-i18n-placeholder="presets.namePlaceholder">
+                        <button type="button" id="savePresetBtn"
+                            class="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm transition" data-i18n-title="presets.save" title="Sauvegarder">💾</button>
+                        <select id="presetSelect"
+                            class="w-36 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm">
+                            <option value="" data-i18n="presets.selectPlaceholder">Presets...</option>
+                        </select>
+                        <button type="button" id="deletePresetBtn"
+                            class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/30 transition text-sm" data-i18n-title="presets.delete" title="Supprimer">🗑️</button>
+                    </div>
+                </div>
+
+                <!-- Reset -->
+                <div>
+                    <button type="button" id="resetStylesBtn"
+                        class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition text-sm text-gray-600 dark:text-gray-400"
+                        data-i18n="reset.button">
+                        🔄 Réinitialiser les styles
+                    </button>
+                </div>
+
+            </div>
+        </details>
+
         <!-- Zone d'affichage du QR Code -->
-        <div id="qrResult" class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hidden fade-in">
-            <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">
-                Votre QR Code EPC
+        <div id="qrResult" class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 hidden fade-in">
+            <h2 class="text-base font-bold text-gray-900 dark:text-white mb-2" data-i18n="result.title">
+                QR Code
             </h2>
 
-            <!-- QR Code -->
-            <div class="flex justify-center mb-6">
-                <div id="qrcode" class="border-4 border-gray-200 dark:border-gray-600 rounded-lg p-4 bg-white"></div>
+            <!-- QR Code + Infos Transaction -->
+            <div id="qrcodeWrapper" class="flex flex-col items-center mb-2">
+                <div id="qrCodeBg" class="rounded-lg inline-block p-4">
+                    <div id="qrTextAbove" class="text-center hidden"></div>
+                    <div id="qrcode" class="flex justify-center"></div>
+                    <div id="qrTextBelow" class="text-center hidden"></div>
+                </div>
             </div>
 
             <!-- Informations -->
-            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-4">
-                <h3 class="font-medium text-gray-900 dark:text-white mb-2">Détails du virement</h3>
+            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 mb-2">
+                <h3 class="font-medium text-gray-900 dark:text-white mb-2" data-i18n="result.details">Détails du virement</h3>
                 <dl class="space-y-1 text-sm">
                     <div class="flex justify-between">
-                        <dt class="text-gray-600 dark:text-gray-400">Bénéficiaire:</dt>
+                        <dt class="text-gray-600 dark:text-gray-400" data-i18n="result.beneficiary">Bénéficiaire:</dt>
                         <dd id="displayBeneficiary" class="font-medium text-gray-900 dark:text-white"></dd>
                     </div>
                     <div class="flex justify-between">
-                        <dt class="text-gray-600 dark:text-gray-400">IBAN:</dt>
+                        <dt class="text-gray-600 dark:text-gray-400" data-i18n="result.iban">IBAN:</dt>
                         <dd id="displayIban" class="font-medium text-gray-900 dark:text-white"></dd>
                     </div>
                     <div class="flex justify-between">
-                        <dt class="text-gray-600 dark:text-gray-400">Montant:</dt>
+                        <dt class="text-gray-600 dark:text-gray-400" data-i18n="result.amount">Montant:</dt>
                         <dd id="displayAmount" class="font-medium text-gray-900 dark:text-white"></dd>
                     </div>
                     <div id="displayRemittanceContainer" class="hidden">
                         <div class="flex justify-between">
-                            <dt class="text-gray-600 dark:text-gray-400">Communication:</dt>
+                            <dt class="text-gray-600 dark:text-gray-400" data-i18n="result.remittance">Communication:</dt>
                             <dd id="displayRemittance" class="font-medium text-gray-900 dark:text-white"></dd>
                         </div>
                     </div>
@@ -192,15 +458,18 @@
             <!-- Actions -->
             <div class="flex gap-3">
                 <button id="downloadBtn"
-                    class="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
+                    class="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+                    data-i18n="result.download">
                     📥 Télécharger PNG
                 </button>
                 <button id="copyBtn"
-                    class="flex-1 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition">
+                    class="flex-1 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition"
+                    data-i18n="result.copy">
                     📋 Copier l'image
                 </button>
                 <button id="newQrBtn"
-                    class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition text-gray-700 dark:text-gray-300">
+                    class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition text-gray-700 dark:text-gray-300"
+                    data-i18n="result.new">
                     Nouveau
                 </button>
             </div>
@@ -212,7 +481,7 @@
     <div id="historyModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4 z-50">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden">
             <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white" data-i18n="history.title">
                     📋 Historique des QR Codes
                 </h2>
                 <button id="closeHistoryBtn" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition">
@@ -230,7 +499,8 @@
 
             <div id="historyClearSection" class="p-6 border-t border-gray-200 dark:border-gray-700 hidden">
                 <button id="clearHistoryBtn"
-                    class="w-full bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition">
+                    class="w-full bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition"
+                    data-i18n="history.clear">
                     🗑️ Effacer l'historique
                 </button>
             </div>
