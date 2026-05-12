@@ -11,12 +11,18 @@ Application web 100% frontend pour générer des QR codes conformes aux standard
 - ✅ Génération de QR codes EPC conformes (Version 002)
 - ✅ Validation IBAN en temps réel (algorithme modulo 97)
 - ✅ Support de tous les pays de l'Espace Économique Européen
+- ✅ **Logo personnalisé** — Upload de votre logo (PNG/JPG), choix de la forme (carré/rond/original), taille (10-40%) et ajustement (étiré/rogné)
+- ✅ **Personnalisation complète du QR code** — Forme des pixels (carré/arrondi/points), couleurs, finder patterns (carré/arrondi/cercle), couleur de fond
+- ✅ **Texte d'information** — Affichez les coordonnées du virement sous le QR code, avec choix de police et couleur
+- ✅ **Presets de styles** — Sauvegardez, chargez et supprimez vos configurations de personnalisation
+- ✅ **Internationalisation** — Interface disponible en 🇫🇷 Français, 🇬🇧 English, 🇩🇪 Deutsch, 🇪🇸 Español, 🇮🇹 Italiano, 🇳🇱 Nederlands
+- ✅ **Export haute résolution** — Choisissez la résolution du QR code exporté (300px, 600px, 900px, 1200px)
 - ✅ Téléchargement du QR code en PNG
 - ✅ Copie du QR code dans le presse-papier
 - ✅ Historique local des QR codes générés
 - ✅ Mode sombre / clair
 - ✅ Interface responsive (mobile-friendly)
-- ✅ **100% frontend** - aucune donnée n'est envoyée à un serveur
+- ✅ **100% frontend** — aucune donnée n'est envoyée à un serveur
 
 ## 🚀 Démarrage Rapide
 
@@ -107,10 +113,11 @@ vercel
 epc-qr-generator/
 ├── index.html              # Page principale
 ├── css/
-│   └── styles.css          # Styles personnalisés (optionnel)
+│   └── styles.css          # Styles personnalisés
 ├── js/
 │   ├── app.js              # Logique principale de l'application
 │   ├── epcGenerator.js     # Génération du format EPC
+│   ├── i18n.js             # Internationalisation (6 langues)
 │   ├── ibanValidator.js    # Validation IBAN (ISO 13616)
 │   ├── qrRenderer.js       # Rendu du QR code
 │   ├── storage.js          # Gestion de l'historique localStorage
@@ -123,7 +130,7 @@ epc-qr-generator/
 - **HTML5** - Structure sémantique
 - **Tailwind CSS** - Framework CSS (via CDN)
 - **JavaScript ES6+** - Modules natifs
-- **QRCode.js** - Génération de QR codes (via CDN)
+- **QR Code Styling** (v1.9.2) — Génération de QR codes stylisés avec logo (via CDN)
 - **localStorage API** - Persistance de l'historique
 
 ## 📦 Dépendances
@@ -134,8 +141,8 @@ Toutes les dépendances sont chargées via CDN (aucune installation npm requise)
 <!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
 
-<!-- QRCode.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<!-- QR Code Styling (for styled QR codes with logo) -->
+<script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.9.2/lib/qr-code-styling.min.js"></script>
 ```
 
 ## 🔒 Format EPC QR Code
@@ -207,6 +214,60 @@ localStorage.clear();
 ```
 
 Ou utilisez le bouton "Effacer l'historique" dans l'interface.
+
+## 🎨 Personnalisation du QR Code
+
+Un panneau de personnalisation vous permet d'adapter l'apparence du QR code à votre image de marque.
+
+### Logo
+- **Upload** — Importez une image PNG ou JPG
+- **Forme** — Carré, rond, ou format original
+- **Taille** — De 10% à 40% de la taille du QR code
+- **Ajustement** — Étiré ou rogné pour s'adapter
+
+### Pixels et couleurs
+- **Forme des modules** — Carrés, arrondis ou points
+- **Couleur des modules** — Choisissez n'importe quelle couleur
+- **Couleur de fond** — Personnalisez l'arrière-plan
+
+### Finder patterns
+- **Style** — Carrés, extra-arrondis ou cercles
+- **Couleur du cadre** et **couleur du point central**
+
+### Infos Transaction
+Affichez les détails du virement sous le QR code :
+- Bénéficiaire, IBAN formaté, montant et communication
+- Police, taille et couleur réglables
+- Activé/désactivé selon vos besoins
+
+### Export
+- Résolution au choix : Standard (300px), Haute (600px), Très Haute (900px), Ultra (1200px)
+- Téléchargement en PNG
+- Copie directe dans le presse-papier
+
+### Presets
+- **Sauvegarder** — Enregistrez la configuration actuelle sous un nom
+- **Charger** — Appliquez un preset enregistré
+- **Supprimer** — Effacez un preset
+
+Les presets sont stockés dans le localStorage de votre navigateur.
+
+## 🌐 Internationalisation
+
+L'interface est disponible en 6 langues :
+
+| Langue          | Code |
+|-----------------|------|
+| 🇫🇷 Français    | `fr` (défaut) |
+| 🇬🇧 English     | `en` |
+| 🇩🇪 Deutsch     | `de` |
+| 🇪🇸 Español     | `es` |
+| 🇮🇹 Italiano    | `it` |
+| 🇳🇱 Nederlands  | `nl` |
+
+La langue est détectée automatiquement via les préférences du navigateur, et peut être changée à tout moment via le sélecteur en haut de page. Le choix est sauvegardé pour les visites suivantes.
+
+Le système de traduction utilise des attributs `data-i18n` dans le HTML pour une traduction dynamique sans rechargement de page.
 
 ## 🎨 Mode Sombre
 
@@ -288,13 +349,12 @@ Les contributions sont les bienvenues !
 ### Idées de contributions
 
 - [ ] Export en SVG
-- [ ] Support du BIC optionnel
+- [x] Traductions (EN, NL, DE, ES, IT)
+- [x] Personnalisation complète (couleurs, logo, presets)
 - [ ] Import depuis fichier CSV
 - [ ] PWA (Progressive Web App)
 - [ ] Tests automatisés
 - [ ] Support multidevises (si extension standard EPC)
-- [ ] Traductions (EN, NL, DE)
-- [ ] Customisation des couleurs du QR code
 
 ## 📄 Licence
 
@@ -311,7 +371,7 @@ MIT License - Voir le fichier [LICENSE](LICENSE)
 ## 🙏 Remerciements
 
 - Inspiré du projet [py-epc-qr](https://github.com/timueh/py-epc-qr) de Tillmann Mühlpfordt
-- QR Code generation par [QRCode.js](https://github.com/davidshimjs/qrcodejs)
+- QR Code generation par [QR Code Styling](https://github.com/kozakdenys/qr-code-styling)
 - Styling par [Tailwind CSS](https://tailwindcss.com/)
 
 ## 📞 Support
