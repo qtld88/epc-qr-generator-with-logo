@@ -1,40 +1,40 @@
-# 🏦 Générateur de QR Code EPC
+# 🏦 EPC QR Generator
 
-Application web 100% frontend pour générer des QR codes conformes aux standards **European Payments Council (EPC)** pour les virements SEPA.
+100% frontend web application to generate QR codes compliant with **European Payments Council (EPC)** standards for SEPA transfers.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![No Backend](https://img.shields.io/badge/Backend-None-green.svg)]()
 [![Privacy First](https://img.shields.io/badge/Privacy-100%25-success.svg)]()
 
-## 🎯 Fonctionnalités
+## 🎯 Features
 
-- ✅ Génération de QR codes EPC conformes (Version 002)
-- ✅ Validation IBAN en temps réel (algorithme modulo 97)
-- ✅ Support de tous les pays de l'Espace Économique Européen
-- ✅ **Logo personnalisé** — Upload de votre logo (PNG/JPG), choix de la forme (carré/rond/original), taille (10-40%) et ajustement (étiré/rogné)
-- ✅ **Personnalisation complète du QR code** — Forme des pixels (carré/arrondi/points), couleurs, finder patterns (carré/arrondi/cercle), couleur de fond
-- ✅ **Texte d'information** — Affichez les coordonnées du virement sous le QR code, avec choix de police et couleur
-- ✅ **Presets de styles** — Sauvegardez, chargez et supprimez vos configurations de personnalisation
-- ✅ **Internationalisation** — Interface disponible en 🇫🇷 Français, 🇬🇧 English, 🇩🇪 Deutsch, 🇪🇸 Español, 🇮🇹 Italiano, 🇳🇱 Nederlands
-- ✅ **Export haute résolution** — Choisissez la résolution du QR code exporté (300px, 600px, 900px, 1200px)
-- ✅ Téléchargement du QR code en PNG
-- ✅ Copie du QR code dans le presse-papier
-- ✅ Historique local des QR codes générés
-- ✅ Mode sombre / clair
-- ✅ Interface responsive (mobile-friendly)
-- ✅ **100% frontend** — aucune donnée n'est envoyée à un serveur
+- ✅ Generation of compliant EPC QR codes (Version 002)
+- ✅ Real-time IBAN validation (modulo 97 algorithm)
+- ✅ Support for all European Economic Area countries
+- ✅ **Custom logo** — Upload your logo (PNG/JPG), choose shape (square/round/original), size (10-40%) and fit (stretched/cropped)
+- ✅ **Full QR code customization** — Pixel shape (square/rounded/dots), colors, finder patterns (square/rounded/circle), background color
+- ✅ **Information text** — Display transfer details below the QR code, with choice of font and color
+- ✅ **Style presets** — Save, load and delete your customization configurations
+- ✅ **Internationalization** — Interface available in 🇫🇷 French, 🇬🇧 English, 🇩🇪 German, 🇪🇸 Spanish, 🇮🇹 Italian, 🇳🇱 Dutch
+- ✅ **High-resolution export** — Choose the exported QR code resolution (300px, 600px, 900px, 1200px)
+- ✅ Download QR code as PNG
+- ✅ Copy QR code to clipboard
+- ✅ Local history of generated QR codes
+- ✅ Dark / Light mode
+- ✅ Responsive interface (mobile-friendly)
+- ✅ **100% frontend** — no data is sent to any server
 
-## 🚀 Démarrage Rapide
+## 🚀 Quick Start
 
 ### Installation
 
-1. **Clonez ou téléchargez le projet**
+1. **Clone or download the project**
 ```bash
-git clone https://github.com/votre-username/epc-qr-generator.git
+git clone https://github.com/your-username/epc-qr-generator.git
 cd epc-qr-generator
 ```
 
-2. **Structure des fichiers requise**
+2. **Required file structure**
 ```
 epc-qr-generator/
 ├── index.html
@@ -50,28 +50,28 @@ epc-qr-generator/
 └── README.md
 ```
 
-3. **Ouvrez dans votre navigateur**
+3. **Open in your browser**
 
-### Option 1 : Utilisation directe
+### Option 1: Direct usage
 
-Ouvrez simplement `index.html` dans votre navigateur (double-clic).
+Simply open `index.html` in your browser (double-click).
 
-### Option 2 : Serveur local (recommandé pour le développement)
+### Option 2: Local server (recommended for development)
 
 ```bash
-# Avec Python 3
+# With Python 3
 python -m http.server 8000
 
-# Avec Node.js
+# With Node.js
 npx serve
 
-# Avec PHP
+# With PHP
 php -S localhost:8000
 ```
 
-Puis ouvrez http://localhost:8000 dans votre navigateur.
+Then open http://localhost:8000 in your browser.
 
-### Option 3 : Déploiement
+### Option 3: Deployment
 
 **GitHub Pages**
 ```bash
@@ -79,13 +79,13 @@ git init
 git add .
 git commit -m "Initial commit"
 git branch -M main
-git remote add origin https://github.com/votre-username/epc-qr-generator.git
+git remote add origin https://github.com/your-username/epc-qr-generator.git
 git push -u origin main
-# Activez GitHub Pages dans Settings > Pages
+# Enable GitHub Pages in Settings > Pages
 ```
 
 **Netlify Drop**
-- Glissez-déposez le dossier sur [netlify.com/drop](https://app.netlify.com/drop)
+- Drag and drop the folder onto [netlify.com/drop](https://app.netlify.com/drop)
 
 **Vercel**
 ```bash
@@ -93,49 +93,49 @@ npm i -g vercel
 vercel
 ```
 
-## 📋 Utilisation
+## 📋 Usage
 
-1. **Remplissez le formulaire** avec les informations du virement :
-   - Nom du bénéficiaire (obligatoire, max 70 caractères)
-   - IBAN (obligatoire, validé en temps réel)
-   - Montant en EUR (optionnel)
-   - Communication / Référence (optionnel, max 140 caractères)
+1. **Fill in the form** with the transfer details:
+   - Recipient name (required, max 70 characters)
+   - IBAN (required, validated in real time)
+   - Amount in EUR (optional)
+   - Communication / Reference (optional, max 140 characters)
 
-2. **Cliquez sur "Générer le QR Code"**
+2. **Click "Generate QR Code"**
 
-3. **Scannez le QR code** avec votre application bancaire compatible EPC
+3. **Scan the QR code** with your EPC-compatible banking app
 
-4. **Téléchargez ou copiez** le QR code généré
+4. **Download or copy** the generated QR code
 
 ## 🏗️ Architecture
 
 ```
 epc-qr-generator/
-├── index.html              # Page principale
+├── index.html              # Main page
 ├── css/
-│   └── styles.css          # Styles personnalisés
+│   └── styles.css          # Custom styles
 ├── js/
-│   ├── app.js              # Logique principale de l'application
-│   ├── epcGenerator.js     # Génération du format EPC
-│   ├── i18n.js             # Internationalisation (6 langues)
-│   ├── ibanValidator.js    # Validation IBAN (ISO 13616)
-│   ├── qrRenderer.js       # Rendu du QR code
-│   ├── storage.js          # Gestion de l'historique localStorage
-│   └── darkMode.js         # Gestion du mode sombre
+│   ├── app.js              # Main application logic
+│   ├── epcGenerator.js     # EPC format generation
+│   ├── i18n.js             # Internationalization (6 languages)
+│   ├── ibanValidator.js    # IBAN validation (ISO 13616)
+│   ├── qrRenderer.js       # QR code rendering
+│   ├── storage.js          # localStorage history management
+│   └── darkMode.js         # Dark mode management
 └── README.md
 ```
 
-## 🔧 Technologies Utilisées
+## 🔧 Technologies Used
 
-- **HTML5** - Structure sémantique
-- **Tailwind CSS** - Framework CSS (via CDN)
-- **JavaScript ES6+** - Modules natifs
-- **QR Code Styling** (v1.9.2) — Génération de QR codes stylisés avec logo (via CDN)
-- **localStorage API** - Persistance de l'historique
+- **HTML5** — Semantic structure
+- **Tailwind CSS** — CSS framework (via CDN)
+- **JavaScript ES6+** — Native modules
+- **QR Code Styling** (v1.9.2) — Stylized QR code generation with logo (via CDN)
+- **localStorage API** — History persistence
 
-## 📦 Dépendances
+## 📦 Dependencies
 
-Toutes les dépendances sont chargées via CDN (aucune installation npm requise) :
+All dependencies are loaded via CDN (no npm installation required):
 
 ```html
 <!-- Tailwind CSS -->
@@ -145,26 +145,26 @@ Toutes les dépendances sont chargées via CDN (aucune installation npm requise)
 <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.9.2/lib/qr-code-styling.min.js"></script>
 ```
 
-## 🔒 Format EPC QR Code
+## 🔒 EPC QR Code Format
 
-Les QR codes générés respectent la spécification **EPC QR Code Version 002** :
+The generated QR codes comply with the **EPC QR Code Version 002** specification:
 
 ```
 BCD                           # Service Tag
 002                           # Version
 1                             # Character set (UTF-8)
 SCT                           # Identification (SEPA Credit Transfer)
-[BIC]                         # BIC du bénéficiaire (optionnel)
-[Nom du bénéficiaire]         # Max 70 caractères
-[IBAN]                        # IBAN du bénéficiaire
-EUR[Montant]                  # Ex: EUR123.45 (optionnel)
-[Code purpose]                # Optionnel (vide)
-[Référence structurée]        # Optionnel (vide)
-[Référence non structurée]    # Max 140 caractères
-[Infos bénéficiaire]          # Optionnel (vide)
+[BIC]                         # Recipient BIC (optional)
+[Recipient name]              # Max 70 characters
+[IBAN]                        # Recipient IBAN
+EUR[Amount]                   # E.g. EUR123.45 (optional)
+[Purpose code]                # Optional (blank)
+[Structured reference]        # Optional (blank)
+[Unstructured reference]      # Max 140 characters
+[Recipient info]              # Optional (blank)
 ```
 
-### Exemple
+### Example
 
 ```
 BCD
@@ -181,207 +181,207 @@ Donation pour Wikipedia
 
 ```
 
-## ✅ Validation IBAN
+## ✅ IBAN Validation
 
-L'application valide les IBAN selon la norme **ISO 13616** :
+The application validates IBANs according to the **ISO 13616** standard:
 
-1. ✅ Vérification du format (2 lettres pays + 2 chiffres contrôle + compte)
-2. ✅ Vérification de la longueur selon le pays
-3. ✅ Calcul de la somme de contrôle (algorithme modulo 97)
-4. ✅ Support de 32 pays de l'EEE
+1. ✅ Format check (2 country letters + 2 check digits + account number)
+2. ✅ Length check by country
+3. ✅ Checksum calculation (modulo 97 algorithm)
+4. ✅ Support for 32 EEA countries
 
-### Pays supportés
+### Supported countries
 
-🇦🇹 Autriche • 🇧🇪 Belgique • 🇧🇬 Bulgarie • 🇭🇷 Croatie • 🇨🇾 Chypre • 🇨🇿 Tchéquie • 🇩🇰 Danemark • 🇪🇪 Estonie • 🇫🇮 Finlande • 🇫🇷 France • 🇩🇪 Allemagne • 🇬🇷 Grèce • 🇭🇺 Hongrie • 🇮🇸 Islande • 🇮🇪 Irlande • 🇮🇹 Italie • 🇱🇻 Lettonie • 🇱🇮 Liechtenstein • 🇱🇹 Lituanie • 🇱🇺 Luxembourg • 🇲🇹 Malte • 🇳🇱 Pays-Bas • 🇳🇴 Norvège • 🇵🇱 Pologne • 🇵🇹 Portugal • 🇷🇴 Roumanie • 🇸🇰 Slovaquie • 🇸🇮 Slovénie • 🇪🇸 Espagne • 🇸🇪 Suède • 🇨🇭 Suisse
+🇦🇹 Austria • 🇧🇪 Belgium • 🇧🇬 Bulgaria • 🇭🇷 Croatia • 🇨🇾 Cyprus • 🇨🇿 Czech Republic • 🇩🇰 Denmark • 🇪🇪 Estonia • 🇫🇮 Finland • 🇫🇷 France • 🇩🇪 Germany • 🇬🇷 Greece • 🇭🇺 Hungary • 🇮🇸 Iceland • 🇮🇪 Ireland • 🇮🇹 Italy • 🇱🇻 Latvia • 🇱🇮 Liechtenstein • 🇱🇹 Lithuania • 🇱🇺 Luxembourg • 🇲🇹 Malta • 🇳🇱 Netherlands • 🇳🇴 Norway • 🇵🇱 Poland • 🇵🇹 Portugal • 🇷🇴 Romania • 🇸🇰 Slovakia • 🇸🇮 Slovenia • 🇪🇸 Spain • 🇸🇪 Sweden • 🇨🇭 Switzerland
 
-## 💾 Stockage Local
+## 💾 Local Storage
 
-L'application utilise le **localStorage** du navigateur pour :
+The application uses the browser **localStorage** for:
 
-- 💾 **Historique** : Les 10 derniers QR codes générés
-- 🌓 **Préférence de thème** : Mode sombre/clair
-- 🔒 **Vie privée** : Toutes les données restent sur votre appareil
+- 💾 **History**: The last 10 generated QR codes
+- 🌓 **Theme preference**: Dark/Light mode
+- 🔒 **Privacy**: All data stays on your device
 
-### Accéder à l'historique
+### Accessing history
 
-Cliquez sur le bouton **"📋 Historique"** dans l'interface pour afficher vos QR codes récents.
+Click the **"📋 History"** button in the interface to view your recent QR codes.
 
-### Effacer les données
+### Clearing data
 
 ```javascript
-// Dans la console du navigateur
+// In the browser console
 localStorage.clear();
 ```
 
-Ou utilisez le bouton "Effacer l'historique" dans l'interface.
+Or use the "Clear history" button in the interface.
 
-## 🎨 Personnalisation du QR Code
+## 🎨 QR Code Customization
 
-Un panneau de personnalisation vous permet d'adapter l'apparence du QR code à votre image de marque.
+A customization panel lets you adapt the QR code appearance to your brand.
 
 ### Logo
-- **Upload** — Importez une image PNG ou JPG
-- **Forme** — Carré, rond, ou format original
-- **Taille** — De 10% à 40% de la taille du QR code
-- **Ajustement** — Étiré ou rogné pour s'adapter
+- **Upload** — Import a PNG or JPG image
+- **Shape** — Square, round, or original format
+- **Size** — From 10% to 40% of the QR code size
+- **Fit** — Stretched or cropped to fit
 
-### Pixels et couleurs
-- **Forme des modules** — Carrés, arrondis ou points
-- **Couleur des modules** — Choisissez n'importe quelle couleur
-- **Couleur de fond** — Personnalisez l'arrière-plan
+### Pixels and colors
+- **Module shape** — Squares, rounded or dots
+- **Module color** — Choose any color
+- **Background color** — Customize the background
 
 ### Finder patterns
-- **Style** — Carrés, extra-arrondis ou cercles
-- **Couleur du cadre** et **couleur du point central**
+- **Style** — Squares, extra-rounded or circles
+- **Frame color** and **center dot color**
 
-### Infos Transaction
-Affichez les détails du virement sous le QR code :
-- Bénéficiaire, IBAN formaté, montant et communication
-- Police, taille et couleur réglables
-- Activé/désactivé selon vos besoins
+### Transaction Info
+Display transfer details below the QR code:
+- Recipient, formatted IBAN, amount and communication
+- Adjustable font, size and color
+- Enable/disable as needed
 
 ### Export
-- Résolution au choix : Standard (300px), Haute (600px), Très Haute (900px), Ultra (1200px)
-- Téléchargement en PNG
-- Copie directe dans le presse-papier
+- Choice of resolution: Standard (300px), High (600px), Very High (900px), Ultra (1200px)
+- Download as PNG
+- Direct copy to clipboard
 
 ### Presets
-- **Sauvegarder** — Enregistrez la configuration actuelle sous un nom
-- **Charger** — Appliquez un preset enregistré
-- **Supprimer** — Effacez un preset
+- **Save** — Save the current configuration under a name
+- **Load** — Apply a saved preset
+- **Delete** — Remove a preset
 
-Les presets sont stockés dans le localStorage de votre navigateur.
+Presets are stored in your browser's localStorage.
 
-## 🌐 Internationalisation
+## 🌐 Internationalization
 
-L'interface est disponible en 6 langues :
+The interface is available in 6 languages:
 
-| Langue          | Code |
+| Language        | Code |
 |-----------------|------|
-| 🇫🇷 Français    | `fr` (défaut) |
+| 🇫🇷 French      | `fr` (default) |
 | 🇬🇧 English     | `en` |
-| 🇩🇪 Deutsch     | `de` |
-| 🇪🇸 Español     | `es` |
-| 🇮🇹 Italiano    | `it` |
-| 🇳🇱 Nederlands  | `nl` |
+| 🇩🇪 German      | `de` |
+| 🇪🇸 Spanish     | `es` |
+| 🇮🇹 Italian     | `it` |
+| 🇳🇱 Dutch       | `nl` |
 
-La langue est détectée automatiquement via les préférences du navigateur, et peut être changée à tout moment via le sélecteur en haut de page. Le choix est sauvegardé pour les visites suivantes.
+The language is detected automatically via browser preferences, and can be changed at any time using the selector at the top of the page. The choice is saved for subsequent visits.
 
-Le système de traduction utilise des attributs `data-i18n` dans le HTML pour une traduction dynamique sans rechargement de page.
+The translation system uses `data-i18n` attributes in the HTML for dynamic translation without page reload.
 
-## 🎨 Mode Sombre
+## 🎨 Dark Mode
 
-Basculez entre les thèmes clair et sombre avec le bouton toggle en haut à droite de l'interface.
+Toggle between light and dark themes using the toggle button at the top right of the interface.
 
-La préférence est automatiquement sauvegardée et restaurée lors de votre prochaine visite.
+The preference is automatically saved and restored on your next visit.
 
-## 🔐 Sécurité & Vie Privée
+## 🔐 Security & Privacy
 
-- ✅ **Aucune donnée envoyée** : Tout s'exécute dans votre navigateur
-- ✅ **Pas de cookies** : Utilisation uniquement de localStorage
-- ✅ **Pas de tracking** : Aucun analytics ou service tiers
-- ✅ **Open source** : Code auditable publiquement
-- ✅ **HTTPS recommandé** : Pour le déploiement en production
+- ✅ **No data sent**: Everything runs in your browser
+- ✅ **No cookies**: Uses only localStorage
+- ✅ **No tracking**: No analytics or third-party services
+- ✅ **Open source**: Publicly auditable code
+- ✅ **HTTPS recommended**: For production deployment
 
-## 🧪 Tests
+## 🧪 Testing
 
-### Tests manuels recommandés
+### Recommended manual tests
 
 ```bash
-# IBAN valides
-BE68 5390 0754 7034   # Belgique
+# Valid IBANs
+BE68 5390 0754 7034   # Belgium
 FR14 2004 1010 0505 0001 3M02 606   # France
-DE89 3704 0044 0532 0130 00   # Allemagne
+DE89 3704 0044 0532 0130 00   # Germany
 
-# IBAN invalides (mauvaise somme de contrôle)
+# Invalid IBANs (bad checksum)
 BE68 5390 0754 7035
 FR14 2004 1010 0505 0001 3M02 607
 
-# Montants limites
+# Limit amounts
 0.01 EUR              # Minimum
 999999999.99 EUR      # Maximum
 
-# Caractères spéciaux
-Tester émojis, accents, caractères spéciaux dans la communication
+# Special characters
+Test emojis, accents, special characters in the communication field
 ```
 
-### Test avec applications bancaires
+### Testing with banking apps
 
-Testez les QR codes générés avec :
-- 📱 Applications bancaires belges (BNP Paribas, ING, KBC, Belfius)
-- 📱 Applications bancaires françaises (Boursorama, N26, Revolut)
-- 📱 Applications bancaires allemandes (Sparkasse, Deutsche Bank)
+Test the generated QR codes with:
+- 📱 Belgian banking apps (BNP Paribas, ING, KBC, Belfius)
+- 📱 French banking apps (Boursorama, N26, Revolut)
+- 📱 German banking apps (Sparkasse, Deutsche Bank)
 
-## 🐛 Résolution de problèmes
+## 🐛 Troubleshooting
 
-### Le QR code ne se génère pas
-- Vérifiez que JavaScript est activé dans votre navigateur
-- Vérifiez que l'IBAN est valide et bien formaté
-- Ouvrez la console (F12) pour voir les erreurs
+### The QR code does not generate
+- Check that JavaScript is enabled in your browser
+- Verify the IBAN is valid and properly formatted
+- Open the console (F12) to see errors
 
-### L'application bancaire ne reconnaît pas le QR code
-- Assurez-vous que votre banque supporte les QR codes EPC
-- Vérifiez que le montant ne dépasse pas 999999999.99 EUR
-- Certaines banques limitent les montants via QR code
+### The banking app does not recognize the QR code
+- Make sure your bank supports EPC QR codes
+- Verify that the amount does not exceed 999999999.99 EUR
+- Some banks limit amounts via QR code
 
-### L'historique ne se sauvegarde pas
-- Vérifiez que le localStorage n'est pas désactivé
-- Le mode navigation privée peut empêcher le stockage
-- Vérifiez l'espace de stockage disponible
+### History is not saving
+- Check that localStorage is not disabled
+- Private browsing mode may prevent storage
+- Check available storage space
 
-## 📚 Ressources
+## 📚 Resources
 
 - [EPC QR Code Guidelines](https://en.wikipedia.org/wiki/EPC_QR_code)
 - [ISO 13616 - IBAN Standard](https://www.iso.org/standard/81090.html)
 - [SEPA Credit Transfer](https://www.europeanpaymentscouncil.eu/what-we-do/sepa-credit-transfer)
-- [Bibliothèque py-epc-qr (inspiration Python)](https://github.com/timueh/py-epc-qr)
+- [py-epc-qr library (Python inspiration)](https://github.com/timueh/py-epc-qr)
 
-## 🤝 Contribution
+## 🤝 Contributing
 
-Les contributions sont les bienvenues !
+Contributions are welcome!
 
-1. Fork le projet
-2. Créez une branche (`git checkout -b feature/amelioration`)
-3. Committez vos changements (`git commit -m 'Ajout fonctionnalité'`)
-4. Push vers la branche (`git push origin feature/amelioration`)
-5. Ouvrez une Pull Request
+1. Fork the project
+2. Create a branch (`git checkout -b feature/improvement`)
+3. Commit your changes (`git commit -m 'Add feature'`)
+4. Push to the branch (`git push origin feature/improvement`)
+5. Open a Pull Request
 
-### Idées de contributions
+### Ideas for Contributions
 
-- [ ] Export en SVG
-- [x] Traductions (EN, NL, DE, ES, IT)
-- [x] Personnalisation complète (couleurs, logo, presets)
-- [ ] Import depuis fichier CSV
+- [ ] SVG export
+- [x] Translations (EN, NL, DE, ES, IT)
+- [x] Full customization (colors, logo, presets)
+- [ ] Import from CSV file
 - [ ] PWA (Progressive Web App)
-- [ ] Tests automatisés
-- [ ] Support multidevises (si extension standard EPC)
+- [ ] Automated tests
+- [ ] Multi-currency support (if EPC standard extension)
 
-## 📄 Licence
+## 📄 License
 
-MIT License - Voir le fichier [LICENSE](LICENSE)
+MIT License — See the [LICENSE](LICENSE) file
 
 ## ⚠️ Disclaimers
 
-**1er Disclaimer** : L'auteur de ce code n'a aucune affiliation avec le European Payments Council (EPC). Vous êtes libre d'utiliser ce code, mais toute utilisation est à vos propres risques, notamment commerciaux.
+**1st Disclaimer**: The author of this code has no affiliation with the European Payments Council (EPC). You are free to use this code, but any use is at your own risk, including commercial use.
 
-**2ème Disclaimer** : Actuellement, les spécifications EPC sont implémentées uniquement pour les virements bancaires SEPA basés sur IBAN dans l'Espace Économique Européen (EEE).
+**2nd Disclaimer**: Currently, the EPC specifications are implemented only for SEPA bank transfers based on IBAN in the European Economic Area (EEA).
 
-**3ème Disclaimer** : Bien que l'application génère des QR codes conformes au standard EPC, testez toujours avec votre application bancaire réelle avant utilisation en production.
+**3rd Disclaimer**: Although the application generates QR codes compliant with the EPC standard, always test with your actual banking app before production use.
 
-## 🙏 Remerciements
+## 🙏 Acknowledgements
 
-- Inspiré du projet [py-epc-qr](https://github.com/timueh/py-epc-qr) de Tillmann Mühlpfordt
-- QR Code generation par [QR Code Styling](https://github.com/kozakdenys/qr-code-styling)
-- Styling par [Tailwind CSS](https://tailwindcss.com/)
+- Inspired by the [py-epc-qr](https://github.com/timueh/py-epc-qr) project by Tillmann Mühlpfordt
+- QR Code generation by [QR Code Styling](https://github.com/kozakdenys/qr-code-styling)
+- Styling by [Tailwind CSS](https://tailwindcss.com/)
 
 ## 📞 Support
 
-Pour toute question ou problème :
-- Ouvrez une [issue sur GitHub](https://github.com/votre-username/epc-qr-generator/issues)
-- Consultez la section [Résolution de problèmes](#-résolution-de-problèmes)
+For any questions or issues:
+- Open an [issue on GitHub](https://github.com/your-username/epc-qr-generator/issues)
+- Check the [Troubleshooting](#-troubleshooting) section
 
 ---
 
 **Made with ❤️ for SEPA payments**
 
-*Générez des QR codes EPC en toute simplicité, rapidité et confidentialité !*
+*Generate EPC QR codes with simplicity, speed and privacy!*
